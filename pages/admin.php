@@ -1,0 +1,10 @@
+<?php
+require_once __DIR__ . '/../assets/php/layout.php';
+require_admin();
+try{$pdo=db();$users=(int)$pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();$devices=(int)$pdo->query('SELECT COUNT(*) FROM devices')->fetchColumn();$readings=(int)$pdo->query('SELECT COUNT(*) FROM readings')->fetchColumn();$alerts=(int)$pdo->query('SELECT COUNT(*) FROM alerts WHERE closed_at IS NULL')->fetchColumn();$resetRequests=(int)$pdo->query("SELECT COUNT(*) FROM password_reset_requests WHERE status='pending'")->fetchColumn();}catch(Throwable $exception){$users=$devices=$readings=$alerts=$resetRequests=0;}
+layout_start('Admin panel','admin');
+?>
+<section class="health-grid admin-stats"><article class="health-card"><h2>Users</h2><strong><?= $users ?></strong></article><article class="health-card"><h2>Devices</h2><strong><?= $devices ?></strong></article><article class="health-card"><h2>Stored readings</h2><strong><?= $readings ?></strong></article><article class="health-card"><h2>Open alerts</h2><strong><?= $alerts ?></strong></article></section>
+<section class="content-card"><h2>Administration</h2><p>Manage the settings that affect the device and its data.</p><div class="admin-links"><?php foreach([['Devices','admin_devices.php','Register ESP32 devices and issue device keys.'],['Thresholds','admin_thresholds.php','Set ranges and calibrated sensor limits.'],['Users','admin_users.php','Create faculty and administrator accounts.'],['Storage','admin_storage.php','Review database size and retention.'],['Notifications','admin_notifications.php','Faculty password reset requests.'],['Activity log','admin_log.php','Review recent account and settings changes.']] as [$title,$path,$description]): ?><a class="admin-tile" href="<?= e(app_url('pages/'.$path)) ?>"><strong><?= e($title) ?><?php if($title==='Notifications'&&$resetRequests): ?><span class="notification-count" aria-label="<?= $resetRequests ?> pending requests"><?= $resetRequests ?></span><?php endif; ?></strong><span><?= e($description) ?></span></a><?php endforeach; ?></div></section>
+<?php layout_end(); ?>
+
