@@ -118,17 +118,17 @@ function layout_start(string $title, string $active): void {
       <link rel="stylesheet" href="<?= e(app_url('assets/css/app.css?v=20261022-6')) ?>">
       <link rel="stylesheet" href="<?= e(app_url('responsiveness/desktop/desktop.css')) ?>">
       <link rel="stylesheet" href="<?= e(app_url('responsiveness/laptop/laptop.css')) ?>">
-      <link rel="stylesheet" href="<?= e(app_url('responsiveness/tablet/tablet.css')) ?>">
-      <link rel="stylesheet" href="<?= e(app_url('responsiveness/mobile/mobile.css')) ?>">
+      <link rel="stylesheet" href="<?= e(app_url('responsiveness/tablet/tablet.css?v=20261024-1')) ?>">
+      <link rel="stylesheet" href="<?= e(app_url('responsiveness/mobile/mobile.css?v=20261024-9')) ?>">
       <script src="https://unpkg.com/lucide@latest"></script>
-      <script src="<?= e(app_url('assets/js/app.js?v=20261022-4')) ?>" defer></script>
+      <script src="<?= e(app_url('assets/js/app.js?v=20261024-1')) ?>" defer></script>
     </head>
     <body class="app-page" data-app-base="<?= e(app_url()) ?>">
     <div class="app-shell" id="top">
       <aside class="sidebar" aria-label="Main navigation">
         <div class="brand-row">
           <div class="brand"><strong>Classroom Environment Monitor</strong></div>
-          <button class="sidebar-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" title="Hide navigation"><i class="toggle-expanded" data-lucide="panel-left-close" aria-hidden="true"></i><i class="toggle-collapsed" data-lucide="chevron-right" aria-hidden="true"></i></button>
+          <button class="sidebar-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" title="Hide navigation"><i class="toggle-expanded" data-lucide="panel-left-close" aria-hidden="true"></i><i class="toggle-collapsed" data-lucide="chevron-down" aria-hidden="true"></i></button>
         </div>
         <nav class="primary-nav">
           <?php foreach ($nav as [$label, $href, $icon, $key]): ?>
@@ -151,6 +151,19 @@ function layout_start(string $title, string $active): void {
           </div>
         </div>
       </aside>
+      <nav class="tablet-nav" aria-label="Tablet navigation">
+        <?php foreach (array_slice($nav, 0, 4) as [$label, $href, $icon, $key]): ?>
+          <a class="nav-link <?= $active === $key ? 'active' : '' ?>" href="<?= e(app_url($href)) ?>" <?= $active === $key ? 'aria-current="page"' : '' ?>><i data-lucide="<?= e($icon) ?>" aria-hidden="true"></i><span><?= e($label) ?></span></a>
+        <?php endforeach; ?>
+        <details class="tablet-more <?= in_array($active, array_column(array_slice($nav, 4), 3), true) ? 'has-active' : '' ?>">
+          <summary class="nav-link"><i data-lucide="ellipsis" aria-hidden="true"></i><span>More</span></summary>
+          <div class="tablet-more-menu">
+            <?php foreach (array_slice($nav, 4) as [$label, $href, $icon, $key]): ?>
+              <a class="nav-link <?= $active === $key ? 'active' : '' ?>" href="<?= e(app_url($href)) ?>" <?= $active === $key ? 'aria-current="page"' : '' ?>><i data-lucide="<?= e($icon) ?>" aria-hidden="true"></i><span><?= e($label) ?></span></a>
+            <?php endforeach; ?>
+          </div>
+        </details>
+      </nav>
       <main class="main-content">
         <header class="page-header"><div class="page-header-copy"><h1><?= e($title) ?></h1><p id="page-subtitle"><?= $active === 'summary' ? 'Room 301 · Sample data · Updated 1 minute ago' : 'Classroom Environment Monitor' ?></p></div><span class="connection-dot" id="connection-dot" aria-hidden="true"></span></header>
     <?php

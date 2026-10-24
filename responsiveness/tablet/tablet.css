@@ -1,1 +1,22 @@
-@media(min-width:701px) and (max-width:1100px){.main-content{padding:24px}.reading-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.trend-grid{grid-template-columns:minmax(0,1fr)}.health-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.tablet-nav{display:none}
+@media(min-width:701px) and (max-width:1100px){
+  .app-page,.app-page .app-shell{height:100dvh;overflow:hidden}
+  .app-page .app-shell{display:block}
+  .app-page .sidebar{display:none}
+  .app-page .main-content{width:100%;height:100dvh;min-width:0;padding:24px 24px calc(96px + env(safe-area-inset-bottom));overflow-y:auto}
+  .app-page .main-content>*{flex-shrink:0}
+  .reading-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .trend-grid{grid-template-columns:minmax(0,1fr)}
+  .health-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+  .tablet-nav{position:fixed;right:0;bottom:0;left:0;z-index:80;display:flex;align-items:stretch;gap:4px;min-height:68px;padding:6px max(12px,env(safe-area-inset-left)) calc(6px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--surface);box-shadow:0 -4px 18px #14281b12}
+  .tablet-nav>.nav-link,.tablet-more>summary{flex:1;min-width:0;min-height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:4px 2px;border-radius:8px;font-size:.75rem;line-height:1;white-space:nowrap}
+  .tablet-nav .nav-link svg,.tablet-more>summary svg{width:20px;height:20px}
+  .tablet-more{position:static;flex:1;min-width:0}
+  .tablet-more>summary{list-style:none;cursor:pointer}
+  .tablet-more>summary::-webkit-details-marker{display:none}
+  .tablet-more.has-active>summary{background:var(--primary-soft);color:var(--primary-dark);font-weight:600}
+  .tablet-more-menu{position:absolute;right:12px;bottom:calc(100% + 8px);width:min(300px,calc(100vw - 24px));display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;padding:8px;border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:0 8px 24px #14281b20}
+  .tablet-more:not([open]) .tablet-more-menu{display:none}
+  .tablet-more-menu>.nav-link{min-width:0;min-height:48px;display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px;font-size:.8125rem;line-height:1.2;white-space:normal}
+  .tablet-more-menu>.nav-link span{min-width:0;overflow-wrap:anywhere}
+}

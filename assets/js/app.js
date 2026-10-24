@@ -33,6 +33,8 @@
     if (window.matchMedia('(max-width: 700px)').matches) document.body.classList.add('sidebar-hidden');
     const syncSidebarToggle = () => {
       const hidden = document.body.classList.contains('sidebar-hidden');
+      sidebar.classList.toggle('is-hidden', hidden);
+      sidebarToggle.classList.toggle('is-docked', hidden);
       sidebarToggle.setAttribute('aria-label', hidden ? 'Show navigation' : 'Hide navigation');
       sidebarToggle.title = hidden ? 'Show navigation' : 'Hide navigation';
       sidebarToggle.setAttribute('aria-expanded', String(!hidden));
