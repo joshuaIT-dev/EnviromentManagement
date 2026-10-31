@@ -54,8 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sign in · Environment Monitor</title>
-  <script>try{const r=document.documentElement,s=localStorage.getItem('enviro-font-size');r.dataset.theme=localStorage.getItem('enviro-theme')==='dark'?'dark':'light';r.dataset.fontSize=['small','default','large'].includes(s)?s:'default';r.dataset.motion=localStorage.getItem('enviro-motion')==='off'?'off':'on'}catch{}</script>
-  <link rel="stylesheet" href="<?= e(app_url('assets/css/app.css?v=20261022-4')) ?>">
+  <script>try{const get=n=>{const c=document.cookie.split('; ').find(v=>v.startsWith('enviro-'+n+'='));if(c)return decodeURIComponent(c.slice(c.indexOf('=')+1));try{return localStorage.getItem('enviro-'+n)}catch{return null}};const s=get('font-size'),t=get('theme'),m=get('motion'),r=document.documentElement;r.dataset.theme=t==='dark'?'dark':'light';r.dataset.fontSize=['small','default','large'].includes(s)?s:'default';r.dataset.motion=m==='off'?'off':'on';r.classList.add('site-loading');document.addEventListener('DOMContentLoaded',()=>r.classList.remove('site-loading'),{once:true})}catch{}</script>
+  <link rel="stylesheet" href="<?= e(app_url('assets/css/app.css?v=20261024-11')) ?>">
   <script src="<?= e(app_url('assets/js/login.js')) ?>" defer></script>
 </head>
 <body class="auth-page">

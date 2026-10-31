@@ -5,6 +5,7 @@ date_default_timezone_set('Asia/Manila');
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_name('enviro_session');
     session_start([
+        'cookie_secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
         'cookie_httponly' => true,
         'cookie_samesite' => 'Lax',
         'use_strict_mode' => true,
@@ -94,7 +95,7 @@ function layout_start(string $title, string $active): void {
     $role = $_SESSION['role'] ?? 'faculty';
     $nameParts = preg_split('/\s+/', trim($userName)) ?: [];
     $initials = strtoupper(substr($nameParts[0] ?? 'F', 0, 1) . (count($nameParts) > 1 ? substr(end($nameParts), 0, 1) : ''));
-    $nav = [
+    $facultyNav = [
         ['Summary', 'pages/summary.php', 'layout-dashboard', 'summary'],
         ['Temperature', 'pages/parameter.php?sensor=temperature', 'thermometer', 'temperature'],
         ['Humidity', 'pages/parameter.php?sensor=humidity', 'droplets', 'humidity'],
@@ -106,6 +107,18 @@ function layout_start(string $title, string $active): void {
         ['Comparison', 'pages/comparison.php', 'chart-no-axes-combined', 'comparison'],
         ['Device settings', 'pages/device.php', 'settings-2', 'device'],
     ];
+    $adminNav = [
+        ['Admin overview', 'pages/admin.php', 'layout-dashboard', 'admin'],
+        ['Devices and LCD', 'pages/admin_devices.php', 'cpu', 'admin_devices'],
+        ['Users and roles', 'pages/admin_users.php', 'users', 'admin_users'],
+        ['Thresholds and night window', 'pages/admin_thresholds.php', 'sliders-horizontal', 'admin_thresholds'],
+        ['Notifications', 'pages/admin_notifications.php', 'bell', 'admin_notifications'],
+        ['Data and storage', 'pages/admin_storage.php', 'database', 'admin_storage'],
+        ['Activity log', 'pages/admin_log.php', 'history', 'admin_log'],
+    ];
+    $nav = $role === 'admin' ? array_merge($facultyNav, $adminNav) : $facultyNav;
+    $selectedDevice = filter_var($_GET['device_id'] ?? null, FILTER_VALIDATE_INT);
+    $navDeviceId = $selectedDevice && $selectedDevice > 0 ? (int)$selectedDevice : null;
     ?>
     <!doctype html>
     <html lang="en">
@@ -114,25 +127,48 @@ function layout_start(string $title, string $active): void {
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="theme-color" content="#f4f8f4">
       <title><?= e($title) ?> · Classroom Environment Monitor</title>
-      <script>try{const r=document.documentElement,s=localStorage.getItem('enviro-font-size');r.dataset.theme=localStorage.getItem('enviro-theme')==='dark'?'dark':'light';r.dataset.fontSize=['small','default','large'].includes(s)?s:'default';r.dataset.motion=localStorage.getItem('enviro-motion')==='off'?'off':'on'}catch{}</script>
-      <link rel="stylesheet" href="<?= e(app_url('assets/css/app.css?v=20261022-6')) ?>">
+      <script>try{const get=n=>{const c=document.cookie.split('; ').find(v=>v.startsWith('enviro-'+n+'='));if(c)return decodeURIComponent(c.slice(c.indexOf('=')+1));try{return localStorage.getItem('enviro-'+n)}catch{return null}};const s=get('font-size'),t=get('theme'),m=get('motion'),r=document.documentElement;r.dataset.theme=t==='dark'?'dark':'light';r.dataset.fontSize=['small','default','large'].includes(s)?s:'default';r.dataset.motion=m==='off'?'off':'on';r.classList.add('site-loading');document.addEventListener('DOMContentLoaded',()=>r.classList.remove('site-loading'),{once:true})}catch{}</script>
+      <link rel="stylesheet" href="<?= e(app_url('assets/css/app.css?v=20261029-6')) ?>">
       <link rel="stylesheet" href="<?= e(app_url('responsiveness/desktop/desktop.css')) ?>">
       <link rel="stylesheet" href="<?= e(app_url('responsiveness/laptop/laptop.css')) ?>">
       <link rel="stylesheet" href="<?= e(app_url('responsiveness/tablet/tablet.css?v=20261024-1')) ?>">
-      <link rel="stylesheet" href="<?= e(app_url('responsiveness/mobile/mobile.css?v=20261024-9')) ?>">
+      <link rel="stylesheet" href="<?= e(app_url('responsiveness/mobile/mobile.css?v=20261029-11')) ?>">
       <script src="https://unpkg.com/lucide@latest"></script>
-      <script src="<?= e(app_url('assets/js/app.js?v=20261024-1')) ?>" defer></script>
+      <script src="<?= e(app_url('assets/js/app.js?v=20261029-3')) ?>" defer></script>
     </head>
-    <body class="app-page" data-app-base="<?= e(app_url()) ?>">
+    <body class="app-page app-page-<?= e($active) ?> app-role-<?= e($role) ?>" data-app-base="<?= e(app_url()) ?>" data-cache-scope="<?= (int)($_SESSION['user_id'] ?? 0) ?>">
+      <header class="mobile-topbar">
+        <strong><span class="mobile-brand-full"><?= $role === 'admin' ? 'Environment Monitor' : 'Classroom Environment Monitor' ?></span><span class="mobile-brand-short"><?= $role === 'admin' ? 'Environment Monitor' : 'CEM' ?></span></strong>
+        <?php if ($role === 'admin'): ?><a class="mobile-profile mobile-admin-profile" href="<?= e(app_url('pages/settings.php')) ?>" aria-label="Account settings"><span class="mobile-avatar"><?= e($initials) ?></span></a><?php else: ?><a class="mobile-profile" href="<?= e(app_url('pages/settings.php')) ?>"><span class="mobile-avatar"><?= e($initials) ?></span><span>Profile</span></a><?php endif; ?>
+      </header>
+      <nav class="tablet-nav" aria-label="Main navigation">
+        <?php foreach (array_slice($nav, 0, 3) as [$label, $href, $icon, $key]): $navHref = $navDeviceId ? $href . (str_contains($href, '?') ? '&' : '?') . 'device_id=' . $navDeviceId : $href; ?>
+          <a class="nav-link <?= $active === $key ? 'active' : '' ?>" href="<?= e(app_url($navHref)) ?>" <?= $active === $key ? 'aria-current="page"' : '' ?>><i data-lucide="<?= e($icon) ?>" aria-hidden="true"></i><span><?= $role === 'admin' && $key === 'admin_devices' ? 'Devices' : ($role === 'admin' && $key === 'admin_users' ? 'Users' : e($label)) ?></span></a>
+        <?php endforeach; ?>
+        <details class="tablet-more <?= in_array($active, array_column(array_slice($nav, 3), 3), true) ? 'has-active' : '' ?>">
+          <summary class="nav-link"><i data-lucide="sliders-horizontal" aria-hidden="true"></i><span>More</span></summary>
+          <button class="mobile-more-backdrop" type="button" aria-label="Close menu"></button>
+          <div class="tablet-more-menu">
+            <div class="mobile-more-heading"><span class="mobile-sheet-grip"></span><strong>More</strong><p>Explore more tools</p><button class="mobile-more-close" type="button" aria-label="Close menu">×</button></div>
+            <div class="mobile-more-links">
+              <?php foreach (array_slice($nav, 3) as [$label, $href, $icon, $key]): $navHref = $navDeviceId ? $href . (str_contains($href, '?') ? '&' : '?') . 'device_id=' . $navDeviceId : $href; ?>
+                <a class="nav-link <?= $active === $key ? 'active' : '' ?>" href="<?= e(app_url($navHref)) ?>" <?= $active === $key ? 'aria-current="page"' : '' ?>><i data-lucide="<?= e($icon) ?>" aria-hidden="true"></i><span><?= e($label) ?></span></a>
+              <?php endforeach; ?>
+            </div>
+            <a class="mobile-account-row" href="<?= e(app_url('pages/settings.php')) ?>"><span class="mobile-avatar"><?= e($initials) ?></span><span><strong><?= e($userName) ?></strong><small><?= e(ucfirst($role)) ?> · Account settings</small></span></a>
+            <form class="mobile-logout-form" method="post" action="<?= e(app_url('logout.php')) ?>"><input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>"><button class="mobile-logout" type="submit"><i data-lucide="log-out" aria-hidden="true"></i>Log out</button></form>
+          </div>
+        </details>
+      </nav>
     <div class="app-shell" id="top">
       <aside class="sidebar" aria-label="Main navigation">
         <div class="brand-row">
           <div class="brand"><strong>Classroom Environment Monitor</strong></div>
-          <button class="sidebar-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" title="Hide navigation"><i class="toggle-expanded" data-lucide="panel-left-close" aria-hidden="true"></i><i class="toggle-collapsed" data-lucide="chevron-down" aria-hidden="true"></i></button>
+          <button class="sidebar-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" title="Hide navigation"><i class="toggle-expanded" data-lucide="panel-left-close" aria-hidden="true"></i><i class="toggle-collapsed" data-lucide="chevron-right" aria-hidden="true"></i></button>
         </div>
         <nav class="primary-nav">
-          <?php foreach ($nav as [$label, $href, $icon, $key]): ?>
-            <a class="nav-link <?= $active === $key ? 'active' : '' ?>" href="<?= e(app_url($href)) ?>" <?= $active === $key ? 'aria-current="page"' : '' ?>>
+          <?php foreach ($nav as [$label, $href, $icon, $key]): $navHref = $navDeviceId ? $href . (str_contains($href, '?') ? '&' : '?') . 'device_id=' . $navDeviceId : $href; ?>
+            <a class="nav-link <?= $active === $key ? 'active' : '' ?>" href="<?= e(app_url($navHref)) ?>" <?= $active === $key ? 'aria-current="page"' : '' ?>>
               <i data-lucide="<?= e($icon) ?>" aria-hidden="true"></i><span><?= e($label) ?></span>
             </a>
           <?php endforeach; ?>
@@ -151,19 +187,6 @@ function layout_start(string $title, string $active): void {
           </div>
         </div>
       </aside>
-      <nav class="tablet-nav" aria-label="Tablet navigation">
-        <?php foreach (array_slice($nav, 0, 4) as [$label, $href, $icon, $key]): ?>
-          <a class="nav-link <?= $active === $key ? 'active' : '' ?>" href="<?= e(app_url($href)) ?>" <?= $active === $key ? 'aria-current="page"' : '' ?>><i data-lucide="<?= e($icon) ?>" aria-hidden="true"></i><span><?= e($label) ?></span></a>
-        <?php endforeach; ?>
-        <details class="tablet-more <?= in_array($active, array_column(array_slice($nav, 4), 3), true) ? 'has-active' : '' ?>">
-          <summary class="nav-link"><i data-lucide="ellipsis" aria-hidden="true"></i><span>More</span></summary>
-          <div class="tablet-more-menu">
-            <?php foreach (array_slice($nav, 4) as [$label, $href, $icon, $key]): ?>
-              <a class="nav-link <?= $active === $key ? 'active' : '' ?>" href="<?= e(app_url($href)) ?>" <?= $active === $key ? 'aria-current="page"' : '' ?>><i data-lucide="<?= e($icon) ?>" aria-hidden="true"></i><span><?= e($label) ?></span></a>
-            <?php endforeach; ?>
-          </div>
-        </details>
-      </nav>
       <main class="main-content">
         <header class="page-header"><div class="page-header-copy"><h1><?= e($title) ?></h1><p id="page-subtitle"><?= $active === 'summary' ? 'Room 301 · Sample data · Updated 1 minute ago' : 'Classroom Environment Monitor' ?></p></div><span class="connection-dot" id="connection-dot" aria-hidden="true"></span></header>
     <?php
@@ -179,7 +202,17 @@ function layout_end(): void {
     <?php
 }
 
-function get_active_device(PDO $pdo): ?array {
+function get_active_device(PDO $pdo, ?int $deviceId = null): ?array {
+    if ($deviceId === null && isset($_GET['device_id'])) {
+        $queryId = filter_var($_GET['device_id'], FILTER_VALIDATE_INT);
+        if ($queryId !== false && $queryId > 0) $deviceId = (int)$queryId;
+    }
+    if ($deviceId !== null && $deviceId > 0) {
+        $stmt = $pdo->prepare('SELECT * FROM devices WHERE id=? LIMIT 1');
+        $stmt->execute([$deviceId]);
+        $device = $stmt->fetch();
+        if ($device) return $device;
+    }
     return $pdo->query('SELECT * FROM devices WHERE is_active = 1 ORDER BY id LIMIT 1')->fetch() ?: null;
 }
 
@@ -189,8 +222,17 @@ function get_latest_reading(PDO $pdo, int $deviceId): ?array {
     return $stmt->fetch() ?: null;
 }
 
-function dashboard_data(PDO $pdo): array {
-    $device = get_active_device($pdo);
+function sensor_chart_svg(array $rows, string $field = 'value'): string {
+    $values = array_values(array_filter(array_map(static fn($row) => is_numeric($row[$field] ?? null) ? (float)$row[$field] : null, array_reverse($rows)), static fn($value) => $value !== null));
+    if (!$values) return '';
+    $min = min($values); $max = max($values); $range = max(1, $max - $min); $last = count($values) - 1;
+    $points = [];
+    foreach ($values as $i => $value) $points[] = number_format(24 + ($last ? $i * 712 / $last : 356), 1, '.', '') . ',' . number_format(108 - (($value - $min) / $range) * 88, 1, '.', '');
+    return '<svg class="sensor-history-chart" viewBox="0 0 760 128" role="img" aria-label="Sensor readings over time"><path class="chart-gridline" d="M24 20H736 M24 64H736 M24 108H736"/><polyline points="' . e(implode(' ', $points)) . '"/><circle cx="' . e(explode(',', $points[$last])[0]) . '" cy="' . e(explode(',', $points[$last])[1]) . '" r="4"/></svg>';
+}
+
+function dashboard_data(PDO $pdo, ?int $deviceId = null): array {
+    $device = get_active_device($pdo, $deviceId);
     if (!$device) return ['device' => null, 'reading' => null, 'alerts' => [], 'open_alerts' => 0, 'coverage' => null];
 
     $reading = get_latest_reading($pdo, (int)$device['id']);

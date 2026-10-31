@@ -58,6 +58,63 @@ CREATE TABLE IF NOT EXISTS devices (
   KEY ix_devices_active (is_active)
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS device_enrollment_requests (
+  mac_address CHAR(17) NOT NULL,
+  device_label VARCHAR(100) NOT NULL,
+  client_ip VARCHAR(45) NOT NULL,
+  status ENUM('pending','registered') NOT NULL DEFAULT 'pending',
+  first_seen_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  last_seen_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  registered_device_id BIGINT UNSIGNED NULL,
+  PRIMARY KEY (mac_address),
+  KEY ix_enrollment_pending (status, last_seen_at),
+  CONSTRAINT fk_enrollment_device FOREIGN KEY (registered_device_id) REFERENCES devices(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS device_display_settings (
+  device_id BIGINT UNSIGNED NOT NULL,
+  show_temperature TINYINT(1) NOT NULL DEFAULT 1,
+  show_humidity TINYINT(1) NOT NULL DEFAULT 1,
+  show_air TINYINT(1) NOT NULL DEFAULT 1,
+  show_light TINYINT(1) NOT NULL DEFAULT 1,
+  seconds_per_screen TINYINT UNSIGNED NOT NULL DEFAULT 5,
+  PRIMARY KEY (device_id),
+  CONSTRAINT fk_display_device FOREIGN KEY (device_id) REFERENCES devices(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS device_alert_policies (
+  device_id BIGINT UNSIGNED NOT NULL,
+  readings_required TINYINT UNSIGNED NOT NULL DEFAULT 2,
+  window_minutes SMALLINT UNSIGNED NOT NULL DEFAULT 30,
+  PRIMARY KEY (device_id),
+  CONSTRAINT fk_alert_policy_device FOREIGN KEY (device_id) REFERENCES devices(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS admin_notification_settings (
+  id TINYINT UNSIGNED NOT NULL,
+  email_enabled TINYINT(1) NOT NULL DEFAULT 0,
+  recipient_emails VARCHAR(1000) NOT NULL DEFAULT '',
+  warning_enabled TINYINT(1) NOT NULL DEFAULT 1,
+  alert_enabled TINYINT(1) NOT NULL DEFAULT 1,
+  device_offline_enabled TINYINT(1) NOT NULL DEFAULT 1,
+  light_at_night_enabled TINYINT(1) NOT NULL DEFAULT 1,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_by BIGINT UNSIGNED NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_notification_admin FOREIGN KEY (updated_by) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+INSERT IGNORE INTO admin_notification_settings (id) VALUES (1);
+
+CREATE TABLE IF NOT EXISTS data_retention_settings (
+  id TINYINT UNSIGNED NOT NULL,
+  raw_readings_days SMALLINT UNSIGNED NOT NULL DEFAULT 30,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_by BIGINT UNSIGNED NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_retention_admin FOREIGN KEY (updated_by) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+INSERT IGNORE INTO data_retention_settings (id) VALUES (1);
+
 CREATE TABLE IF NOT EXISTS readings (
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   device_id BIGINT UNSIGNED NOT NULL,

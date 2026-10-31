@@ -65,5 +65,43 @@ tbody tr{transition:background-color .15s ease}
 :root[data-font-size="large"]{font-size:112.5%}
 .setting-row select{min-width:120px;min-height:38px;padding:7px 10px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--ink)}
 .setting-row select:focus-visible{outline:2px solid #97c79c;outline-offset:2px}
+.reading-chart{width:100%;height:36px;display:flex;align-items:center;margin-top:10px}.reading-chart .sparkline,.reading-chart .sparkline-placeholder{margin-top:0}
+.trend-image-wrap{height:130px;display:grid;place-items:center;margin-top:12px}.trend-image-wrap .trend-image{margin:0}
+html.site-loading .main-content h1,html.site-loading .main-content h2,html.site-loading .main-content h3,html.site-loading .main-content p,html.site-loading .main-content a,html.site-loading .main-content button,html.site-loading .main-content label,html.site-loading .main-content legend,html.site-loading .main-content dt,html.site-loading .main-content dd,html.site-loading .main-content th,html.site-loading .main-content td,html.site-loading .main-content strong,html.site-loading .main-content span,html.site-loading .main-content small,html.site-loading .main-content code,html.site-loading .auth-card h1,html.site-loading .auth-card p,html.site-loading .auth-card label,html.site-loading .auth-card button,html.site-loading .auth-card summary{color:transparent!important;text-shadow:none!important;background-image:linear-gradient(90deg,var(--line) 25%,var(--surface) 50%,var(--line) 75%);background-repeat:no-repeat;background-size:200% 100%;animation:skeleton-loading 1.2s ease-in-out infinite;border-radius:4px}
+html.site-loading .main-content h1,html.site-loading .main-content h2,html.site-loading .main-content h3,html.site-loading .auth-card h1{max-width:75%}
+html.site-loading .main-content p,html.site-loading .auth-card p{max-width:85%}
+html.site-loading .main-content :is(input,select,textarea),html.site-loading .main-content .table-scroll,html.site-loading .auth-card :is(input,select){color:transparent!important;background:linear-gradient(90deg,var(--line) 25%,var(--surface) 50%,var(--line) 75%)!important;background-size:200% 100%!important;border-color:transparent!important;animation:skeleton-loading 1.2s ease-in-out infinite}
+html.site-loading .main-content :is(.inline-notice,.form-success,.form-error,.empty-chart,.sparkline-placeholder){color:transparent!important;background:linear-gradient(90deg,var(--line) 25%,var(--surface) 50%,var(--line) 75%)!important;background-size:200% 100%!important;border-color:transparent!important;animation:skeleton-loading 1.2s ease-in-out infinite}
+html.site-loading .main-content .trend-image,html.site-loading .main-content .sparkline{visibility:hidden}
+html.site-loading .main-content .table-scroll table{visibility:hidden}
+html.site-loading .connection-dot{background:var(--line);box-shadow:none}
+.summary-loading .page-header h1,.summary-loading #page-subtitle,.summary-loading #overall-pill,.summary-loading #overall-message,.summary-loading .inline-notice,.summary-loading .reading-card h2,.summary-loading .reading-value strong,.summary-loading .reading-value span,.summary-loading .reading-card>.status-pill,.summary-loading .reading-chart,.summary-loading .trend-header h2,.summary-loading .trend-header>a,.summary-loading .trend-image-wrap,.summary-loading .empty-chart,.summary-loading .light-timeline,.summary-loading .health-card h2,.summary-loading .health-card>#last-data,.summary-loading .health-card>strong,.summary-loading .health-card p,.summary-loading .alerts-card .section-heading h2,.summary-loading .alerts-card .section-heading>a,.summary-loading .alerts-card .empty-state,.summary-loading .alerts-card .table-scroll,.summary-loading .prototype-note{color:transparent!important;background:linear-gradient(90deg,var(--line) 25%,var(--surface) 50%,var(--line) 75%);background-size:200% 100%;animation:skeleton-loading 1.2s ease-in-out infinite;border-radius:6px}
+.summary-loading .page-header h1{width:min(80%,280px);height:1.25em}
+.summary-loading #page-subtitle{width:55%;height:1em}
+.summary-loading #overall-pill,.summary-loading .reading-card>.status-pill,.summary-loading .health-card>#last-data{width:88px;min-height:25px}
+.summary-loading #overall-message{width:85%;min-height:20px}
+.summary-loading .inline-notice{min-height:48px;border-color:transparent}
+.summary-loading .reading-card h2,.summary-loading .health-card h2{width:55%;height:14px}
+.summary-loading .reading-value strong{width:3.5em;height:1.25em}
+.summary-loading .reading-value span{width:3rem;height:1em}
+.summary-loading .trend-header h2{width:55%;height:20px}
+.summary-loading .trend-header h2 span{visibility:hidden}
+.summary-loading .trend-header>a,.summary-loading .alerts-card .section-heading>a{width:76px;height:14px}
+.summary-loading .light-timeline{border-radius:8px}
+.summary-loading .light-timeline>*{visibility:hidden}
+.summary-loading .health-card>strong{width:72px;height:34px}
+.summary-loading .health-card p{width:90%;height:14px}
+.summary-loading .alerts-card .section-heading h2{width:35%;height:20px}
+.summary-loading .alerts-card .table-scroll{min-height:80px}
+.summary-loading .alerts-card table{visibility:hidden}
+.summary-loading .reading-chart .sparkline,.summary-loading .reading-chart .sparkline-placeholder,.summary-loading .trend-image{visibility:hidden}
+.summary-loading .connection-dot{background:var(--line);box-shadow:none}
+.cache-note{margin:-10px 0 0;color:var(--muted);font-size:.8125rem;line-height:1.4}
+@keyframes skeleton-loading{to{background-position:-200% 0}}
 :root[data-motion="off"] *,:root[data-motion="off"] *::before,:root[data-motion="off"] *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 @keyframes dock-heartbeat{0%,100%{transform:translateY(-50%) scale(1)}18%{transform:translateY(-50%) scale(1.08)}36%{transform:translateY(-50%) scale(1)}54%{transform:translateY(-50%) scale(1.05)}72%{transform:translateY(-50%) scale(1)}}
+.sensor-history-chart{width:100%;height:auto;display:block;margin:12px 0 0;overflow:visible}.sensor-history-chart .chart-gridline{fill:none;stroke:var(--line);stroke-width:1}.sensor-history-chart polyline{fill:none;stroke:var(--primary);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.sensor-history-chart circle{fill:var(--primary)}
+.mobile-reading-list{display:none}
+.reading-pagination{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:18px;padding-top:12px;border-top:1px solid var(--line)}.reading-pagination a{color:var(--primary-dark);font-size:.875rem;font-weight:600;text-decoration:none}.reading-pagination a:hover{text-decoration:underline}.reading-pagination span{color:var(--muted);font-size:.8125rem;text-align:center}
+.admin-filter-tabs{margin-bottom:16px}
+.admin-user-actions{min-width:190px}.admin-user-actions>form{margin:0 0 7px}.admin-user-actions details>summary{color:var(--primary-dark);font-size:.8125rem;font-weight:600;cursor:pointer}.admin-user-actions details form.filter-form{display:grid;align-items:stretch;gap:8px;margin:8px 0;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}.admin-user-actions details label{min-width:0}.admin-user-actions details input{width:100%;min-width:0}.report-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}

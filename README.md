@@ -15,13 +15,13 @@ The default XAMPP database settings are database `environment_management`, user 
 
 ## Connect an ESP32
 
-The current Arduino sketch serves its own `GET /data` page; it does not yet upload readings to this app. Add an HTTP `POST` request to the firmware:
+The Arduino sketch keeps its local `GET /data` dashboard and also reports the device to the app. Before registration it sends only its MAC address to `api/discover.php`; it does not upload sensor readings. The device appears under **Admin → Devices → Detected devices · awaiting registration**.
 
-1. In the app, sign in as admin and open **Admin → Devices**. Register a device with a name and location.
-2. Copy the device key shown after registration. It is displayed once. Store it privately in the firmware; do not commit the key to GitHub or share it publicly. Register a separate device/key for each ESP32.
-3. Make sure the XAMPP computer and ESP32 are on the same network. Find the computer's LAN IPv4 address (for example `192.168.1.20`) and use it instead of `localhost` in the ESP32 URL. The computer's firewall must allow inbound Apache traffic (usually TCP port 80).
-4. Send an HTTP `POST` to `http://<COMPUTER-LAN-IP>/EnviromentManagement/api/ingest.php` with `Content-Type: application/json` and an `X-Device-Key: <DEVICE-KEY>` header.
-5. Send readings in this format:
+1. Install **DHT sensor library by Adafruit** and **Adafruit Unified Sensor** in Arduino IDE's Library Manager, select the correct ESP32 board and port, then upload `OneDrive/Documents/Arduino/Environment_management/Environment_management.ino`.
+2. Ensure the XAMPP computer and ESP32 are on the same Wi-Fi network. Set `ingestUrl` and `discoveryUrl` in the sketch to the computer's current LAN IPv4 address; the firewall must allow inbound Apache traffic (usually TCP port 80).
+3. Open Serial Monitor at 115200 baud. With `deviceKey` set to `UNREGISTERED`, HTTP 202 means the site received the ESP32 identity. As an administrator, find it in the detected devices section and register it with a name and location.
+4. Copy the one-time key shown after registration into `deviceKey` in the sketch, then upload again. The firmware will then post sensor readings to `api/ingest.php` with the `X-Device-Key` header. Keep the key private and use a separate key for every ESP32.
+5. The readings use this JSON format:
 
 ```json
 {"temperature":27.4,"humidity":58,"air":142,"gasDigital":0,"light":320}
@@ -29,7 +29,7 @@ The current Arduino sketch serves its own `GET /data` page; it does not yet uplo
 
 `temperature` must be 0–50 °C when supplied; `humidity` must be 0–100% when supplied; `air` and `light` must be integer ADC values from 0 to 4095; `gasDigital` must be integer `0` or `1`. Send at least once every 60 seconds by default; faster repeats can receive HTTP `429` (interval not reached). MQ-135 and LDR readings are raw ADC values and need calibration before treating them as ppm/AQI or lux.
 
-The ESP32 and website must both be running for new readings to appear. The Arduino firmware must use the computer's current LAN IP; it can change when the computer reconnects to Wi-Fi. For a response other than success, check the HTTP status: `401` means the key is missing/invalid, `422` means sensor values are invalid, `429` means the request arrived too soon, and `503` usually means the website cannot reach MySQL.
+The ESP32 and website must both be running for new readings to appear. The Arduino firmware must use the computer's current LAN IP; it can change when the computer reconnects to Wi-Fi. For ingestion, `401` means the key is missing/invalid, `422` means sensor values are invalid, `429` means the request arrived too soon, and `503` usually means the website cannot reach MySQL. Re-import the updated `assets/sql/environment_management.sql` to add the admin settings and device-enrollment table to an existing XAMPP database; it uses `CREATE TABLE IF NOT EXISTS` and does not drop existing data.
 
 ## Other app behavior
 

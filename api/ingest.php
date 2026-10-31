@@ -61,7 +61,10 @@ try {
     $pdo->prepare('UPDATE devices SET last_seen_at = UTC_TIMESTAMP() WHERE id = ?')->execute([$device['id']]);
     evaluate_reading_alerts($pdo, $device, ['temperature_c' => $temperature, 'humidity_pct' => $humidity]);
     $pdo->commit();
-    echo json_encode(['ok' => true, 'receivedAt' => gmdate('c')]);
+    $stmt = $pdo->prepare('SELECT show_temperature,show_humidity,show_air,show_light,seconds_per_screen FROM device_display_settings WHERE device_id=?');
+    $stmt->execute([$device['id']]);
+    $display = $stmt->fetch() ?: ['show_temperature'=>1,'show_humidity'=>1,'show_air'=>1,'show_light'=>1,'seconds_per_screen'=>5];
+    echo json_encode(['ok' => true, 'receivedAt' => gmdate('c'), 'display' => $display]);
 } catch (JsonException $exception) {
     http_response_code(400);
     echo json_encode(['error' => 'Invalid JSON']);
