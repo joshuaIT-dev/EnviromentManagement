@@ -134,11 +134,11 @@ body.app-page.app-role-admin{--bg:#f4f6fa;--surface:#fff;--line:#d8e0ea;--ink:#1
   .mobile-demo-alert p{margin:0;font-size:14px;line-height:18px}
   .mobile-demo-alert-foot{justify-content:space-between;margin-top:auto;color:var(--muted);font-size:12px}
   .mobile-demo-alert-foot a{color:var(--primary);font-size:13px;font-weight:600;text-decoration:none}
-  .tablet-nav{position:fixed!important;right:0;bottom:0;left:0;z-index:1000;display:flex!important;height:calc(54px + env(safe-area-inset-bottom));align-items:flex-start;gap:0;padding:2px 0 env(safe-area-inset-bottom);border-top:1px solid var(--line);background:var(--surface);box-shadow:none}
-  .tablet-nav>.nav-link,.tablet-more>summary{flex:1;min-width:0;height:50px;min-height:50px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;padding:2px 2px 0;border-radius:0;font-size:10.5px;line-height:15px;white-space:nowrap}
-  .tablet-nav>.nav-link svg,.tablet-more>summary svg{width:20px;height:20px;stroke-width:1.8}
+  .tablet-nav{position:fixed!important;right:0;bottom:0;left:0;z-index:1000;display:flex!important;height:calc(54px + env(safe-area-inset-bottom));align-items:stretch;gap:0;padding:2px 0 env(safe-area-inset-bottom);border-top:1px solid var(--line);background:var(--surface);box-shadow:none}
+  .tablet-nav>.nav-link,.tablet-more>summary{box-sizing:border-box;flex:1;min-width:0;height:50px;min-height:50px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:0 2px;border-radius:0;font-size:10.5px;line-height:15px;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+  .tablet-nav>.nav-link svg,.tablet-more>summary svg{box-sizing:content-box;width:20px;height:20px;padding:3px 7px;border-radius:8px;stroke-width:1.8;transition:none}
   .tablet-nav>.nav-link.active,.tablet-more.has-active>summary{background:transparent;color:var(--primary);font-weight:600}
-  .tablet-nav>.nav-link.active svg{box-sizing:content-box;width:20px;height:20px;padding:3px 7px;border-radius:8px;background:var(--primary-soft);color:var(--primary)}
+  .tablet-nav>.nav-link.active svg,.tablet-more.has-active>summary svg,.tablet-more[open]>summary svg{background:var(--primary-soft);color:var(--primary)}
   .tablet-more{position:static;flex:1;min-width:0}
   .tablet-more>summary{list-style:none;cursor:pointer}
   .tablet-more>summary::-webkit-details-marker{display:none}
