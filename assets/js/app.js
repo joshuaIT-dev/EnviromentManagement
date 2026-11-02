@@ -110,9 +110,20 @@
   const cacheNote = document.querySelector('#cache-note');
   const main = document.querySelector('.main-content');
 
+  function setConnectionStatus(state, label, detail) {
+    const card = document.querySelector('#connection-status');
+    if (!card) return;
+    card.className = 'connection-status is-' + state;
+    document.querySelector('#connection-label').textContent = label;
+    document.querySelector('#connection-detail').textContent = detail;
+  }
+
   function renderSummary(data) {
     document.querySelector('#page-subtitle').textContent = data.room + ' \u00b7 ESP32 \u00b7 Updated ' + data.updatedAt;
-    document.querySelector('#connection-dot').classList.toggle('online', data.online);
+    if (data.online) setConnectionStatus('online', 'Online', 'ESP32 is reporting');
+    else if (!data.deviceEnabled) setConnectionStatus('inactive', 'Inactive', 'Device is disabled');
+    else if (data.waiting) setConnectionStatus('inactive', 'Waiting', 'No readings received yet');
+    else setConnectionStatus('offline', 'Offline', 'No recent data from ESP32');
     document.querySelector('#overall-message').textContent = data.message;
     const pill = document.querySelector('#overall-pill');
     pill.textContent = !data.deviceEnabled ? 'Device disabled' : (data.waiting ? 'Waiting for data' : (data.attentionCount === 1 ? '1 reading needs attention' : data.attentionCount + ' readings need attention'));
@@ -147,6 +158,7 @@
       if (!response.ok) throw new Error('Summary request failed');
       const data = await response.json();
       if (data.demo === true) {
+        setConnectionStatus('inactive', 'No device', 'Showing sample dashboard');
         try { localStorage.removeItem(cacheKey); } catch {}
         if (lastData) window.location.reload();
         return;
@@ -157,7 +169,7 @@
       saveCache(data);
       if (cacheNote) cacheNote.hidden = true;
     } catch {
-      document.querySelector('#connection-dot')?.classList.remove('online');
+      setConnectionStatus('unavailable', 'Unavailable', 'Could not refresh device status');
       if (lastData && cacheNote) {
         cacheNote.textContent = 'Live refresh unavailable. Showing saved readings.';
         cacheNote.hidden = false;
