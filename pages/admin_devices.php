@@ -107,7 +107,7 @@ layout_start('Devices & LCD', 'admin_devices');
 <?php if ($message): ?><p class="inline-notice" role="status"><?= e($message) ?></p><?php endif; ?>
 
 <?php if ($keyOnce): ?>
-<section class="content-card key-once"><div><h2>Copy this device key now</h2><p>It is shown once. Add it to the ESP32 sketch and upload again to start sending readings.</p></div><code><?= e($keyOnce) ?></code></section>
+<section class="content-card key-once"><div><h2>Copy this device key now</h2><p>It is shown once. Add it to the ESP32 sketch and upload again to start sending readings.</p></div><div class="key-once-value"><code><?= e($keyOnce) ?></code><button class="button-primary small" type="button" data-copy-device-key>Copy key</button><span class="sr-only" aria-live="polite" data-copy-feedback></span></div></section>
 <?php endif; ?>
 
 <section class="content-card admin-enrollment-section">

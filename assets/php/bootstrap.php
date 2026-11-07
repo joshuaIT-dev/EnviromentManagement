@@ -128,13 +128,13 @@ function layout_start(string $title, string $active): void {
       <meta name="theme-color" content="#f4f8f4">
       <title><?= e($title) ?> · Classroom Environment Monitor</title>
       <script>try{const get=n=>{const c=document.cookie.split('; ').find(v=>v.startsWith('enviro-'+n+'='));if(c)return decodeURIComponent(c.slice(c.indexOf('=')+1));try{return localStorage.getItem('enviro-'+n)}catch{return null}};const s=get('font-size'),t=get('theme'),m=get('motion'),r=document.documentElement;r.dataset.theme=t==='dark'?'dark':'light';r.dataset.fontSize=['small','default','large'].includes(s)?s:'default';r.dataset.motion=m==='off'?'off':'on';r.classList.add('site-loading');document.addEventListener('DOMContentLoaded',()=>r.classList.remove('site-loading'),{once:true})}catch{}</script>
-      <link rel="stylesheet" href="<?= e(app_url('assets/css/app.css?v=20261102-1')) ?>">
+      <link rel="stylesheet" href="<?= e(app_url('assets/css/app.css?v=20261107-4')) ?>">
       <link rel="stylesheet" href="<?= e(app_url('responsiveness/desktop/desktop.css')) ?>">
       <link rel="stylesheet" href="<?= e(app_url('responsiveness/laptop/laptop.css')) ?>">
       <link rel="stylesheet" href="<?= e(app_url('responsiveness/tablet/tablet.css?v=20261024-1')) ?>">
-      <link rel="stylesheet" href="<?= e(app_url('responsiveness/mobile/mobile.css?v=20261102-1')) ?>">
+      <link rel="stylesheet" href="<?= e(app_url('responsiveness/mobile/mobile.css?v=20261107-2')) ?>">
       <script src="https://unpkg.com/lucide@latest"></script>
-      <script src="<?= e(app_url('assets/js/app.js?v=20261102-1')) ?>" defer></script>
+      <script src="<?= e(app_url('assets/js/app.js?v=20261107-2')) ?>" defer></script>
     </head>
     <body class="app-page app-page-<?= e($active) ?> app-role-<?= e($role) ?>" data-app-base="<?= e(app_url()) ?>" data-cache-scope="<?= (int)($_SESSION['user_id'] ?? 0) ?>">
       <header class="mobile-topbar">

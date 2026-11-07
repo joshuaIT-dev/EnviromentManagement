@@ -2,7 +2,7 @@
 .mobile-status-label{display:none}
 .mobile-trend-meta,.mobile-chart-legend{display:none}
 .mobile-brand-short{display:none}
-body.app-page.app-role-admin{--bg:#f4f6fa;--surface:#fff;--line:#d8e0ea;--ink:#1f2937;--muted:#66758f;--primary:#168391;--primary-dark:#126779;--primary-soft:#e8f4f5;background:var(--bg)}
+:root:not([data-theme="dark"]) body.app-page.app-role-admin{--bg:#f4f6fa;--surface:#fff;--line:#d8e0ea;--ink:#1f2937;--muted:#66758f;--primary:#168391;--primary-dark:#126779;--primary-soft:#e8f4f5;background:var(--bg)}
 .app-page.app-role-admin .role{border-color:#b9dce8}
 .app-page.app-role-admin .profile-summary:hover>svg{border-color:#b9dce8}
 .app-page.app-role-admin .profile-summary:focus-visible{outline-color:#8ecfe3}
@@ -66,6 +66,9 @@ body.app-page.app-role-admin{--bg:#f4f6fa;--surface:#fff;--line:#d8e0ea;--ink:#1
 .summary-device-form label{display:flex;min-width:220px;flex-direction:column;gap:5px;color:var(--muted);font-size:11px;font-weight:600}
 .summary-device-form select{width:100%;min-height:40px;padding:7px 34px 7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font-size:13px}
 .summary-device-form .button-primary{min-height:40px;padding:8px 14px;white-space:nowrap}
+/* Keep navigation position when a page link reloads the shared layout. */
+.app-page .primary-nav{overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+.inline-notice{display:flex;flex-direction:column;gap:4px;line-height:1.5}
 @media(max-width:700px){
   html{overflow-x:hidden}
   .app-page{display:block;height:auto;min-height:100dvh;overflow:visible}
@@ -80,14 +83,14 @@ body.app-page.app-role-admin{--bg:#f4f6fa;--surface:#fff;--line:#d8e0ea;--ink:#1
   .app-page .main-content{width:100%;height:auto;min-width:0;min-height:0;align-items:center;gap:8px;padding:12px 16px calc(90px + env(safe-area-inset-bottom));overflow:visible}
   .app-page.sidebar-hidden .main-content{padding-left:16px}
   .app-page .main-content>*{width:100%;max-width:560px;flex-shrink:0;margin-right:0;margin-left:0}
-  .app-page .page-header{flex-direction:column;align-items:center;gap:8px}
-  .app-page .connection-status{min-height:38px;align-self:center;padding:6px 10px}
+  .app-page .page-header{flex-direction:column;align-items:flex-start;gap:7px;text-align:left}
+  .app-page .connection-status{min-height:38px;align-self:flex-start;padding:6px 10px}
   .app-page .connection-copy small{font-size:10px}
   .app-page .prototype-note{display:block;width:100%;max-width:560px;font-size:11px;line-height:15px}
-  .page-header{min-height:58px;justify-content:flex-start;text-align:center}
+  .page-header{min-height:0;justify-content:flex-start;text-align:left}
   .page-header-copy{flex:none;width:100%}
-  .page-header h1{font-size:24px;line-height:29px;letter-spacing:0;white-space:nowrap}
-  .page-header p{margin:8px 0 0;font-size:13px;line-height:17px;white-space:nowrap}
+  .page-header h1{font-size:22px;line-height:27px;letter-spacing:0;white-space:normal}
+  .page-header p{margin:3px 0 0;font-size:12px;line-height:16px;white-space:normal}
   .overall-status{min-height:25px;align-items:center;justify-content:center;flex-direction:column;gap:4px;text-align:center}
   .overall-status p{display:block;font-size:12px;line-height:16px}
   .overall-status .status-pill{font-size:13px}
@@ -99,7 +102,7 @@ body.app-page.app-role-admin{--bg:#f4f6fa;--surface:#fff;--line:#d8e0ea;--ink:#1
   .inline-notice strong{font-size:13px;line-height:16px}
   .inline-notice span{color:var(--muted)}
   .reading-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 12px}
-  .reading-card{min-height:190px;align-items:flex-start;gap:6px;padding:14px;border-radius:12px}
+  .reading-card{min-height:164px;align-items:flex-start;gap:4px;padding:12px;border-radius:12px}
   .reading-card h2{margin:0;color:var(--muted);font-size:13px;line-height:17px}
   .reading-value{min-height:41px;gap:4px}
   .reading-value strong{font-size:30px;line-height:41px;letter-spacing:0}
@@ -122,6 +125,8 @@ body.app-page.app-role-admin{--bg:#f4f6fa;--surface:#fff;--line:#d8e0ea;--ink:#1
   .mobile-chart-legend{display:none}
   .desktop-chart-legend{display:inline}
   .health-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+  .health-card{min-height:84px;padding:12px}
+  .content-card{padding:16px}
   .alerts-card{padding:0;border:0;background:transparent}
   .alerts-card .section-heading{margin:0 0 0;align-items:center}
   .alerts-card .section-heading h2{margin:0;font-size:16px;line-height:22px}
@@ -166,7 +171,7 @@ body.app-page.app-role-admin{--bg:#f4f6fa;--surface:#fff;--line:#d8e0ea;--ink:#1
   .mobile-logout svg{width:18px;height:18px}
   .app-page.app-role-admin{--bg:#f4f6fa;--surface:#fff;--line:#d8e0ea;--ink:#1f2937;--muted:#66758f;--primary:#168391;--primary-dark:#126779;--primary-soft:#e8f4f5;background:var(--bg)}
   .app-role-admin .mobile-topbar>strong{color:var(--ink)}
-  .app-role-admin .mobile-avatar{background:#e8f4f5;color:var(--primary-dark)}
+  .app-role-admin .mobile-avatar{background:var(--primary-soft);color:var(--primary-dark)}
   .app-role-admin .main-content{padding:24px 20px calc(90px + env(safe-area-inset-bottom))}
   .app-role-admin .page-header{justify-content:flex-start;text-align:left}
   .app-role-admin .page-header-copy{width:100%;text-align:left}
@@ -176,8 +181,8 @@ body.app-page.app-role-admin{--bg:#f4f6fa;--surface:#fff;--line:#d8e0ea;--ink:#1
   .app-role-admin .admin-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
   .app-role-admin .admin-stats .health-card{min-height:80px;padding:12px}
   .app-role-admin .admin-stats .health-card:nth-child(3){grid-column:1/-1}
-  .app-role-admin .admin-overview-attention>h2{margin:0 0 0;font-size:14px;line-height:19px}
-  .app-role-admin .admin-overview-attention .mobile-admin-card{min-height:58px}
+  .app-role-admin .admin-overview-attention>h2{margin:0 0 2px;font-size:14px;line-height:19px;text-align:left}
+  .app-role-admin .admin-overview-attention .mobile-admin-card{min-height:66px;padding:12px 14px}
   .app-role-admin .admin-storage-card{padding:12px}
   .app-role-admin .admin-storage-card .section-heading{align-items:flex-start;flex-direction:row}
   .app-role-admin .admin-storage-card .section-heading h2{margin:0;font-size:12px;line-height:16px}
@@ -201,7 +206,7 @@ body.app-page.app-role-admin{--bg:#f4f6fa;--surface:#fff;--line:#d8e0ea;--ink:#1
   .app-role-admin .admin-roles-card{padding:12px}
   .app-role-admin .admin-roles-card p{margin:4px 0;font-size:10px}
   .app-role-admin .admin-overview-attention{display:flex;flex-direction:column;gap:8px}
-  .app-role-admin .storage-meter{height:5px;overflow:hidden;border-radius:99px;background:#d8e0ea}
+  .app-role-admin .storage-meter{height:5px;overflow:hidden;border-radius:99px;background:var(--line)}
   .app-role-admin .storage-meter span{height:100%;display:block;border-radius:inherit;background:var(--primary)}
   .app-role-admin .mobile-more-links>.nav-link{border-color:var(--line);background:var(--surface)}
   .admin-feature-heading{align-items:flex-start;gap:10px}
@@ -217,6 +222,8 @@ body.app-page.app-role-admin{--bg:#f4f6fa;--surface:#fff;--line:#d8e0ea;--ink:#1
   .admin-device-form .admin-lcd-options{grid-column:1}
   .key-once{align-items:stretch;flex-direction:column;gap:12px}
   .key-once code{max-width:none}
+  .key-once-value{width:100%;max-width:none;align-items:stretch;flex-direction:column}
+  .key-once-value button{align-self:flex-start}
   .summary-device-picker{align-items:stretch;flex-direction:column;padding:10px}
   .summary-device-picker>div{display:block}
   .summary-device-form{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
@@ -224,6 +231,11 @@ body.app-page.app-role-admin{--bg:#f4f6fa;--surface:#fff;--line:#d8e0ea;--ink:#1
   .summary-device-form select{min-height:38px;font-size:12px}
   .summary-device-form .button-primary{min-height:38px;padding:7px 10px;font-size:12px}
 }
+:root[data-theme="dark"] .app-role-admin .admin-empty-callout{background:var(--surface)}
+:root[data-theme="dark"] .app-role-admin .admin-enrollment-card dl>div,
+:root[data-theme="dark"] .app-role-admin .admin-device-card dl>div{background:#24352a}
+:root[data-theme="dark"] .app-role-admin .admin-remove-form button{border-color:#713a40;background:var(--surface);color:#ffc1bf}
+:root[data-theme="dark"] .app-role-admin .admin-remove-form button:hover{background:#451f20}
 @media(min-width:701px) and (max-width:1100px){
   .mobile-more-heading,.mobile-account-row{display:none}
   .mobile-logout-form{display:none}
